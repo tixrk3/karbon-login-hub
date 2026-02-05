@@ -1,18 +1,32 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import karbon14Logo from "@/assets/karbon14-logo.png";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { email, password });
+    
+    // Simple auth check for Admin/password
+    if (email === "Admin" && password === "password") {
+      navigate("/dashboard");
+    } else {
+      toast({
+        title: "Erreur de connexion",
+        description: "E-mail ou mot de passe incorrect.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
