@@ -54,7 +54,7 @@ export const LoginForm = () => {
           Se connecter
         </Button>
 
-        <Button type="button" variant="outline" className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold rounded-lg transition-all" onClick={() => window.open("https://karbon14.com", "_blank")}>
+        <Button type="button" variant="outline" className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold rounded-lg transition-all" onClick={() => navigate("/site")}>
           Visitez le site KARBON14
         </Button>
       </form>
