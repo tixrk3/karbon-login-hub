@@ -11,6 +11,7 @@ import Partners from "./pages/Partners";
 import Tags from "./pages/Tags";
 import UsersPage from "./pages/Users";
 import SettingsPage from "./pages/Settings";
+import Site from "./pages/Site";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/site" element={<Site />} />
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/partners" element={<Partners />} />
