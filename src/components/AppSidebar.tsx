@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Tag, Settings, UserCircle } from "lucide-react";
+import { LayoutDashboard, Users, Tag, Settings, UserCircle, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import karbon14Logo from "@/assets/karbon14-logo.png";
@@ -21,13 +21,13 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <Sidebar className="border-r border-border bg-sidebar">
       <div className="flex flex-col items-center py-6 px-4 border-b border-border">
         <img src={karbon14Logo} alt="KARBON14" className="h-16 w-auto mb-2" />
-        <span className="text-foreground font-bold text-lg tracking-wider">KARBON14</span>
+        <span className="text-foreground font-bold text-lg tracking-wider whitespace-nowrap">KARBON14</span>
       </div>
 
       <SidebarContent className="px-3 py-4">
@@ -59,10 +59,17 @@ export function AppSidebar() {
             <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-sm">
               SA
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground">{user.name}</p>
               <p className="text-xs text-muted-foreground">{user.role}</p>
             </div>
+            <button
+              onClick={() => logout()}
+              className="text-muted-foreground hover:text-destructive transition-colors"
+              title="Se déconnecter"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       )}
