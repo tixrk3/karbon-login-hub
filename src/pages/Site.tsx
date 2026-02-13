@@ -87,7 +87,13 @@ const Site = () => {
 
       {/* ── Navbar ── */}
       <nav className="fixed top-0 w-full z-50 transition-all duration-500" style={{
-        background: scrolled ? "rgba(10,14,39,0.95)" : "rgba(10,14,39,0.6)",
+        background: `
+          linear-gradient(135deg, rgba(15,21,53,0.92) 25%, transparent 25%) -10px 0/ 20px 20px,
+          linear-gradient(225deg, rgba(15,21,53,0.92) 25%, transparent 25%) -10px 0/ 20px 20px,
+          linear-gradient(315deg, rgba(15,21,53,0.92) 25%, transparent 25%) 0 0/ 20px 20px,
+          linear-gradient(45deg, rgba(15,21,53,0.92) 25%, transparent 25%) 0 0/ 20px 20px,
+          ${scrolled ? "rgba(10,14,39,0.97)" : "rgba(10,14,39,0.85)"}
+        `,
         backdropFilter: "blur(20px)",
         borderBottom: `1px solid rgba(255,255,255,${scrolled ? "0.1" : "0.04"})`,
         boxShadow: scrolled ? "0 8px 32px rgba(0,0,0,0.4)" : "none",
