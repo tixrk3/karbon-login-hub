@@ -1,16 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { CheckCircle, Shield, Clock, Search, Eye, Zap, RefreshCw, BarChart3, Target, TrendingUp, ArrowRight } from "lucide-react";
+import { CheckCircle, Shield, Clock, Search, Eye, Zap, RefreshCw, BarChart3, Target, TrendingUp, ArrowRight, Send, Mail, User, MessageSquare } from "lucide-react";
 import karbon14Logo from "@/assets/karbon14-logo.png";
 import heroDashboard from "@/assets/hero-dashboard.jpg";
-import problemOffice from "@/assets/problem-office.jpg";
-import impactMeeting from "@/assets/impact-meeting.jpg";
 import standardCelebration from "@/assets/standard-celebration.jpg";
 import featureScreenshot from "@/assets/feature-screenshot.jpg";
 import featureArchive from "@/assets/feature-archive.jpg";
 import featureTrace from "@/assets/feature-trace.jpg";
 import featureOrganize from "@/assets/feature-organize.jpg";
-import detectionRoom from "@/assets/detection-room.jpg";
 import realtimeMonitor from "@/assets/realtime-monitor.jpg";
 
 /* ── Scroll-reveal hook ── */
@@ -41,22 +38,6 @@ const Reveal = ({ children, className = "", delay = 0, direction = "up" }: { chi
       {children}
     </div>
   );
-};
-
-/* ── Counter animation ── */
-const Counter = ({ value, suffix = "" }: { value: string; suffix?: string }) => {
-  const { ref, visible } = useReveal();
-  const [display, setDisplay] = useState("0");
-  useEffect(() => {
-    if (!visible) return;
-    const num = parseInt(value);
-    if (isNaN(num)) { setDisplay(value); return; }
-    let start = 0;
-    const dur = 1500;
-    const step = (ts: number) => { start = start || ts; const p = Math.min((ts - start) / dur, 1); setDisplay(Math.floor(p * num).toString()); if (p < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
-  }, [visible, value]);
-  return <span ref={ref}>{display}{suffix}</span>;
 };
 
 /* ── Parallax on mouse for hero ── */
@@ -91,6 +72,16 @@ const Site = () => {
   const parallax = useParallax();
   const scrolled = useScrolled();
 
+  const [contactForm, setContactForm] = useState({ prenom: "", nom: "", email: "", objet: "", message: "" });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    setTimeout(() => setFormSubmitted(false), 3000);
+    setContactForm({ prenom: "", nom: "", email: "", objet: "", message: "" });
+  };
+
   return (
     <div className="min-h-screen font-sans overflow-x-hidden" style={{ background: "#0A0E27", color: "#FFFFFF" }}>
 
@@ -107,10 +98,9 @@ const Site = () => {
             <span className="font-bold text-lg tracking-wider whitespace-nowrap transition-all duration-300 group-hover:tracking-[0.2em]" style={{ color: "#00FFC8" }}>KARBON14</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm" style={{ color: "#6B7A99" }}>
-            {["Problème", "Solution", "Audit", "Détection", "Pricing"].map(l => (
-              <a key={l} href={`#${l.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`}
-                className="relative py-1 transition-colors duration-300 hover:text-white after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:rounded-full after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
-                style={{ "--tw-after-bg": "#00FFC8" } as any}>
+            {["Solution", "Audit", "Nous contacter"].map(l => (
+              <a key={l} href={`#${l.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-")}`}
+                className="relative py-1 transition-colors duration-300 hover:text-white">
                 <span className="relative z-10">{l}</span>
                 <span className="absolute bottom-0 left-0 w-full h-0.5 rounded-full scale-x-0 transition-transform duration-300 hover:scale-x-100" style={{ background: "#00FFC8" }} />
               </a>
@@ -127,123 +117,42 @@ const Site = () => {
 
       {/* ── Hero ── */}
       <section className="pt-32 pb-24 px-6 relative">
-        {/* Ambient glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] opacity-30 pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(0,255,200,0.15), transparent 70%)" }} />
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-          <Reveal direction="left">
-            <div ref={parallax.ref} onMouseMove={parallax.onMove} onMouseLeave={parallax.onLeave}
-              className="relative transition-transform duration-300 ease-out">
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Big tagline */}
+          <Reveal>
+            <h1 className="text-center text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight" style={{ background: "linear-gradient(135deg, #FFFFFF 30%, #00FFC8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              AI Solution for Transparency in AdTech
+            </h1>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <p className="text-center text-xl lg:text-2xl mb-4 max-w-3xl mx-auto" style={{ color: "#6B7A99" }}>La transparence publicitaire en temps réel</p>
+          </Reveal>
+          <Reveal delay={0.25}>
+            <p className="text-center text-lg font-medium mb-12" style={{ color: "#00FFC8" }}>Audit & preuve de diffusion automatisés</p>
+          </Reveal>
+          <Reveal delay={0.35}>
+            <div className="flex flex-wrap justify-center gap-4 mb-16">
+              <button onClick={() => navigate("/")}
+                className="group relative px-8 py-3.5 rounded-xl font-semibold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,200,0.3)]"
+                style={{ background: "#00FFC8", color: "#0A0E27" }}>
+                <span className="relative z-10 flex items-center gap-2">Démarrer maintenant <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+              </button>
+              <a href="#solution"
+                className="px-8 py-3.5 rounded-xl font-semibold border transition-all duration-300 hover:bg-white/5 hover:border-white/30 hover:scale-105"
+                style={{ borderColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}>
+                En savoir plus
+              </a>
+            </div>
+          </Reveal>
+          <Reveal delay={0.4} direction="scale">
+            <div className="max-w-5xl mx-auto" ref={parallax.ref} onMouseMove={parallax.onMove} onMouseLeave={parallax.onLeave}
+              style={{ transition: "transform 0.3s ease-out" }}>
               <div className="absolute -inset-1 rounded-2xl opacity-60 blur-xl" style={{ background: "linear-gradient(135deg, rgba(0,255,200,0.2), rgba(74,158,255,0.1))" }} />
               <img src={heroDashboard} alt="Dashboard KARBON14" className="relative rounded-2xl shadow-2xl w-full" style={{ border: "1px solid rgba(255,255,255,0.1)" }} />
               <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(0,255,200,0.08) 0%, transparent 50%)" }} />
             </div>
           </Reveal>
-          <div>
-            <Reveal delay={0.1}>
-              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight" style={{ background: "linear-gradient(135deg, #FFFFFF 30%, #00FFC8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                Karbon14
-              </h1>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="text-xl lg:text-2xl mb-4" style={{ color: "#6B7A99" }}>La transparence publicitaire en temps réel</p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <p className="text-lg font-medium" style={{ color: "#00FFC8" }}>Audit & preuve de diffusion automatisés</p>
-            </Reveal>
-            <Reveal delay={0.4}>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <button onClick={() => navigate("/")}
-                  className="group relative px-8 py-3.5 rounded-xl font-semibold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,200,0.3)]"
-                  style={{ background: "#00FFC8", color: "#0A0E27" }}>
-                  <span className="relative z-10 flex items-center gap-2">Démarrer maintenant <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
-                </button>
-                <a href="#solution"
-                  className="px-8 py-3.5 rounded-xl font-semibold border transition-all duration-300 hover:bg-white/5 hover:border-white/30 hover:scale-105"
-                  style={{ borderColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}>
-                  En savoir plus
-                </a>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Problème ── */}
-      <section id="probleme" className="py-24 px-6 relative">
-        <div className="absolute right-0 top-1/2 w-[500px] h-[500px] opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,77,106,0.15), transparent 70%)" }} />
-        <div className="max-w-7xl mx-auto">
-          <Reveal>
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest mb-6 backdrop-blur-sm" style={{ background: "rgba(255,255,255,0.06)", color: "#6B7A99", border: "1px solid rgba(255,255,255,0.08)" }}>PROBLÈME</span>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="text-4xl lg:text-5xl font-bold mb-14 max-w-3xl">La publicité digitale manque de transparence</h2>
-          </Reveal>
-          <div className="grid lg:grid-cols-2 gap-14 items-start">
-            <Reveal direction="left">
-              <div className="relative group">
-                <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" style={{ background: "linear-gradient(135deg, rgba(255,77,106,0.1), rgba(0,255,200,0.1))" }} />
-                <img src={problemOffice} alt="Problème" className="relative rounded-2xl w-full transition-transform duration-500 group-hover:scale-[1.02]" style={{ border: "1px solid rgba(255,255,255,0.08)" }} />
-              </div>
-            </Reveal>
-            <div className="space-y-5">
-              {[
-                { title: "Campagnes non conformes", desc: "Diffusion différente des prévisions" },
-                { title: "Preuves insuffisantes", desc: "Partielles, manuelles, non fiables" },
-                { title: "Contrôle limité", desc: "Agences et annonceurs sans visibilité réelle" },
-                { title: "Impact direct", desc: "Perte de budget + perte de confiance" },
-              ].map((item, i) => (
-                <Reveal key={i} delay={0.1 + i * 0.1} direction="right">
-                  <div className="group flex gap-4 items-start pl-4 py-3 rounded-r-xl transition-all duration-300 hover:bg-white/[0.02] cursor-default"
-                    style={{ borderLeft: "3px solid rgba(255,255,255,0.1)" }}
-                    onMouseEnter={e => (e.currentTarget.style.borderLeftColor = "#00FFC8")}
-                    onMouseLeave={e => (e.currentTarget.style.borderLeftColor = "rgba(255,255,255,0.1)")}>
-                    <div>
-                      <h3 className="text-lg font-medium transition-colors duration-300 group-hover:text-[#00FFC8]">{item.title}</h3>
-                      <p className="text-sm" style={{ color: "#6B7A99" }}>{item.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-              <Reveal delay={0.5}>
-                <div className="mt-6 p-5 rounded-xl backdrop-blur-sm transition-all duration-300 hover:border-white/20" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <p className="text-sm italic" style={{ color: "#6B7A99" }}>L'écosystème fonctionne sur de la déclaration, pas sur de la preuve</p>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Impact Business ── */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <Reveal direction="scale">
-            <div className="relative group mb-14 overflow-hidden rounded-2xl">
-              <img src={impactMeeting} alt="Impact Business" className="w-full transition-transform duration-700 group-hover:scale-105" style={{ border: "1px solid rgba(255,255,255,0.08)" }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #0A0E27 0%, transparent 50%)" }} />
-            </div>
-          </Reveal>
-          <Reveal><span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest mb-6" style={{ background: "rgba(255,255,255,0.06)", color: "#6B7A99", border: "1px solid rgba(255,255,255,0.08)" }}>IMPACT BUSINESS</span></Reveal>
-          <Reveal delay={0.1}><h2 className="text-4xl lg:text-5xl font-bold mb-14">Ce que ça coûte réellement</h2></Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
-            {[
-              { title: "Temps opérationnel", desc: "Screenshots et vérifications manuelles" },
-              { title: "Difficultés contractuelles", desc: "Impossible de contester les fournisseurs" },
-              { title: "Pertes financières", desc: "Surfacturation et sous-diffusion non détectées" },
-              { title: "Décisions biaisées", desc: "Reporting incomplet et optimisation inefficace" },
-            ].map((item, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div className="group p-6 rounded-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
-                  style={{ background: "#0F1535", border: "1px solid rgba(255,255,255,0.08)" }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,255,200,0.2)")}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
-                  <h3 className="text-lg font-medium mb-2 transition-colors duration-300 group-hover:text-[#00FFC8]">{item.title}</h3>
-                  <p className="text-sm" style={{ color: "#6B7A99" }}>{item.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal><div style={{ borderLeft: "3px solid #00FFC8", paddingLeft: "16px" }}><p style={{ color: "#6B7A99" }}>La perte n'est pas seulement financière, elle est stratégique</p></div></Reveal>
         </div>
       </section>
 
@@ -416,52 +325,6 @@ const Site = () => {
         </div>
       </section>
 
-      {/* ── Détection ── */}
-      <section id="detection" className="py-24 px-6 relative">
-        <div className="absolute right-0 bottom-0 w-[500px] h-[500px] opacity-15 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,77,106,0.15), transparent 70%)" }} />
-        <div className="max-w-7xl mx-auto">
-          <Reveal><span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest mb-6" style={{ background: "rgba(255,77,106,0.15)", color: "#FF4D6A", border: "1px solid rgba(255,77,106,0.2)" }}>🔍 DÉTECTION</span></Reveal>
-          <Reveal delay={0.1}><h2 className="text-4xl lg:text-5xl font-bold mb-14">Détection automatique des anomalies</h2></Reveal>
-          <div className="grid lg:grid-cols-2 gap-14 items-start">
-            <div>
-              <div className="grid sm:grid-cols-3 gap-6 mb-8">
-                {[
-                  { title: "Comparaison systématique", desc: "Plan média prévu vs diffusion observée", color: "#FF4D6A" },
-                  { title: "Identification précise", desc: "Manques, retards, sous-diffusion détectés", color: "#FF4D6A" },
-                  { title: "Alertes intelligentes", desc: "Notification immédiate des incohérences", color: "#FF4D6A" },
-                ].map((item, i) => (
-                  <Reveal key={i} delay={i * 0.1}>
-                    <div className="group">
-                      <div className="h-1 w-full mb-4 rounded overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
-                        <div className="h-full rounded transition-all duration-1000" style={{ background: item.color, width: "60%" }} />
-                      </div>
-                      <h3 className="text-base font-medium mb-1 transition-colors duration-300 group-hover:text-[#FF4D6A]">{item.title}</h3>
-                      <p className="text-sm" style={{ color: "#6B7A99" }}>{item.desc}</p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-              <Reveal delay={0.3}>
-                <div className="mt-4">
-                  <div className="h-1 w-full mb-4 rounded overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
-                    <div className="h-full rounded" style={{ background: "#FFB800", width: "40%" }} />
-                  </div>
-                  <h3 className="text-base font-medium mb-1">Arguments concrets</h3>
-                  <p className="text-sm" style={{ color: "#6B7A99" }}>Données pour négociation fournisseur</p>
-                </div>
-              </Reveal>
-              <Reveal delay={0.4}><div className="mt-8" style={{ borderLeft: "3px solid #00FFC8", paddingLeft: "16px" }}><p style={{ color: "#6B7A99" }}>Karbon14 donne du pouvoir aux agences</p></div></Reveal>
-            </div>
-            <Reveal direction="right">
-              <div className="relative group overflow-hidden rounded-2xl">
-                <img src={detectionRoom} alt="Detection" className="rounded-2xl w-full transition-transform duration-700 group-hover:scale-105" style={{ border: "1px solid rgba(255,255,255,0.08)" }} />
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(to top, rgba(255,77,106,0.1), transparent)" }} />
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
       {/* ── Performance ── */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -490,50 +353,76 @@ const Site = () => {
         </div>
       </section>
 
-      {/* ── Pricing ── */}
-      <section id="pricing" className="py-24 px-6 relative">
+      {/* ── Nous contacter ── */}
+      <section id="nous-contacter" className="py-24 px-6 relative">
         <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[900px] h-[500px] opacity-10 pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(0,255,200,0.2), transparent 70%)" }} />
         <div className="max-w-7xl mx-auto">
-          <Reveal><span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest mb-6" style={{ background: "rgba(0,255,200,0.15)", color: "#00FFC8", border: "1px solid rgba(0,255,200,0.2)" }}>PRICING</span></Reveal>
-          <Reveal delay={0.1}><h2 className="text-4xl lg:text-5xl font-bold mb-14">Modèle SaaS simple & scalable</h2></Reveal>
-          <div className="grid sm:grid-cols-3 gap-8 mb-16">
-            {[
-              { price: "40", role: "Lecteur", desc: "Consultation et reporting" },
-              { price: "80", role: "Utilisateur", desc: "Captures + exports", highlight: true },
-              { price: "120", role: "Admin", desc: "Gestion + dashboards + audit avancé" },
-            ].map((item, i) => (
-              <Reveal key={i} delay={i * 0.12}>
-                <div className={`group text-center p-8 rounded-2xl transition-all duration-500 hover:-translate-y-3 ${item.highlight ? "hover:shadow-[0_20px_60px_rgba(0,255,200,0.15)]" : "hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"}`}
-                  style={{ background: "#0F1535", border: item.highlight ? "1px solid rgba(0,255,200,0.3)" : "1px solid rgba(255,255,255,0.08)" }}>
-                  {item.highlight && <div className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(0,255,200,0.1), transparent)" }} />}
-                  <p className="text-4xl font-bold mb-2 relative" style={{ color: "#00FFC8" }}><Counter value={item.price} suffix="€" /><span className="text-lg font-normal" style={{ color: "#6B7A99" }}>/mois</span></p>
-                  <p className="text-lg font-semibold mb-2 relative">{item.role}</p>
-                  <p className="text-sm relative" style={{ color: "#6B7A99" }}>{item.desc}</p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left side - text */}
+            <Reveal direction="left">
+              <div>
+                <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest mb-6" style={{ background: "rgba(0,255,200,0.15)", color: "#00FFC8", border: "1px solid rgba(0,255,200,0.2)" }}>CONTACT</span>
+                <h2 className="text-4xl lg:text-6xl font-bold leading-tight mb-6" style={{ background: "linear-gradient(135deg, #FFFFFF 30%, #00FFC8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Laissez un message.<br />Nous revenons vers vous.
+                </h2>
+                <p className="text-lg mb-8" style={{ color: "#6B7A99" }}>
+                  Une question, une démo, un partenariat ? Notre équipe vous répond sous 24h.
+                </p>
+                <div className="flex items-center gap-3 mb-3">
+                  <Mail className="h-5 w-5" style={{ color: "#00FFC8" }} />
+                  <span style={{ color: "#6B7A99" }}>contact@karbon14.com</span>
                 </div>
-              </Reveal>
-            ))}
-          </div>
+              </div>
+            </Reveal>
 
-          <Reveal><h3 className="text-3xl font-bold mb-8">Démarrez maintenant</h3></Reveal>
-          <div className="grid sm:grid-cols-3 gap-6 mb-14">
-            {[
-              { title: "Pilotes agences médias", desc: "Testez en conditions réelles" },
-              { title: "Partenariats régies", desc: "Intégration avec vos partenaires" },
-              { title: "Déploiement équipe", desc: "Formation et onboarding inclus" },
-            ].map((item, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div className="group p-6 rounded-xl transition-all duration-500 hover:-translate-y-2"
-                  style={{ background: "#0F1535", border: "1px solid rgba(255,255,255,0.08)" }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,255,200,0.2)")}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}>
-                  <h3 className="text-lg font-semibold mb-1 transition-colors duration-300 group-hover:text-[#00FFC8]">{item.title}</h3>
-                  <p className="text-sm" style={{ color: "#6B7A99" }}>{item.desc}</p>
+            {/* Right side - form */}
+            <Reveal direction="right" delay={0.15}>
+              <form onSubmit={handleContactSubmit} className="p-8 rounded-2xl space-y-5" style={{ background: "#0F1535", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: "#6B7A99" }}>Prénom</label>
+                    <input type="text" value={contactForm.prenom} onChange={e => setContactForm(p => ({ ...p, prenom: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2"
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#FFFFFF", focusRingColor: "#00FFC8" } as any}
+                      placeholder="Votre prénom" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: "#6B7A99" }}>Nom</label>
+                    <input type="text" value={contactForm.nom} onChange={e => setContactForm(p => ({ ...p, nom: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2"
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#FFFFFF" }}
+                      placeholder="Votre nom" />
+                  </div>
                 </div>
-              </Reveal>
-            ))}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: "#6B7A99" }}>E-mail <span style={{ color: "#FF4D6A" }}>*</span></label>
+                  <input type="email" required value={contactForm.email} onChange={e => setContactForm(p => ({ ...p, email: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#FFFFFF" }}
+                    placeholder="votre@email.com" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: "#6B7A99" }}>Objet</label>
+                  <input type="text" value={contactForm.objet} onChange={e => setContactForm(p => ({ ...p, objet: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#FFFFFF" }}
+                    placeholder="Objet de votre message" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: "#6B7A99" }}>Message</label>
+                  <textarea rows={4} value={contactForm.message} onChange={e => setContactForm(p => ({ ...p, message: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 focus:ring-2 resize-none"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#FFFFFF" }}
+                    placeholder="Rédigez votre message ici..." />
+                </div>
+                <button type="submit"
+                  className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,255,200,0.3)]"
+                  style={{ background: "#00FFC8", color: "#0A0E27" }}>
+                  {formSubmitted ? "✓ Message envoyé !" : <><Send className="h-4 w-4" /> Envoyer</>}
+                </button>
+              </form>
+            </Reveal>
           </div>
-
-          <Reveal><div style={{ borderLeft: "3px solid #00FFC8", paddingLeft: "16px" }}><p className="font-medium">Karbon14 transforme la publicité digitale en un environnement vérifiable, mesurable et auditable</p></div></Reveal>
         </div>
       </section>
 
@@ -553,7 +442,6 @@ const Site = () => {
         </div>
       </footer>
 
-      {/* ── Smooth scroll CSS ── */}
       <style>{`html { scroll-behavior: smooth; }`}</style>
     </div>
   );
