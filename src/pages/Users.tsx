@@ -4,8 +4,12 @@ import { StatCard } from "@/components/StatCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
 
-const usersData = [
+const initialUsers = [
   { name: "Sarah Anderson", initials: "SA", email: "sarah.anderson@karbon14.com", role: "Administrator", status: "Active", accessLevel: 100, lastActive: "2 mins ago", joined: "1/15/2023", color: "bg-accent" },
   { name: "Michael Chen", initials: "MC", email: "michael.chen@karbon14.com", role: "Administrator", status: "Active", accessLevel: 100, lastActive: "1 hour ago", joined: "2/20/2023", color: "bg-primary" },
   { name: "Emma Rodriguez", initials: "ER", email: "emma.rodriguez@karbon14.com", role: "Regular User", status: "Active", accessLevel: 75, lastActive: "5 mins ago", joined: "6/10/2023", color: "bg-orange-500" },
@@ -14,12 +18,36 @@ const usersData = [
   { name: "David Martinez", initials: "DM", email: "david.martinez@karbon14.com", role: "Regular User", status: "Inactive", accessLevel: 30, lastActive: "3 days ago", joined: "4/12/2023", color: "bg-red-500" },
 ];
 
+const avatarColors = ["bg-accent", "bg-primary", "bg-orange-500", "bg-purple-500", "bg-pink-500", "bg-red-500", "bg-blue-500", "bg-emerald-500"];
+
 const UsersPage = () => {
   const [search, setSearch] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
+  const [usersData, setUsersData] = useState(initialUsers);
+  const [newUser, setNewUser] = useState({ firstName: "", lastName: "", email: "", role: "" });
 
   const filtered = usersData.filter((u) =>
     u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleAddUser = () => {
+    if (!newUser.firstName || !newUser.lastName || !newUser.email) {
+      toast({ title: "Erreur", description: "Veuillez remplir tous les champs obligatoires.", variant: "destructive" });
+      return;
+    }
+    const name = `${newUser.firstName} ${newUser.lastName}`;
+    const initials = `${newUser.firstName[0]}${newUser.lastName[0]}`.toUpperCase();
+    const color = avatarColors[usersData.length % avatarColors.length];
+    const today = new Date();
+    const joined = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    setUsersData([...usersData, {
+      name, initials, email: newUser.email, role: newUser.role || "Regular User",
+      status: "Pending", accessLevel: 0, lastActive: "Never", joined, color,
+    }]);
+    setNewUser({ firstName: "", lastName: "", email: "", role: "" });
+    setShowCreate(false);
+    toast({ title: "Utilisateur ajouté", description: `${name} a été ajouté avec succès.` });
+  };
 
   return (
     <div className="space-y-6">
@@ -33,16 +61,16 @@ const UsersPage = () => {
             <p className="text-muted-foreground">Manage user access and permissions</p>
           </div>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
+        <Button onClick={() => setShowCreate(true)} className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
           <Plus className="h-4 w-4" /> Add User
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Users} title="Total Users" value="6" />
-        <StatCard icon={ShieldCheck} title="Administrators" value="2" />
-        <StatCard icon={UserCheck} title="Active Users" value="4" />
-        <StatCard icon={Clock} title="Pending" value="1" />
+        <StatCard icon={Users} title="Total Users" value={String(usersData.length)} />
+        <StatCard icon={ShieldCheck} title="Administrators" value={String(usersData.filter(u => u.role === "Administrator").length)} />
+        <StatCard icon={UserCheck} title="Active Users" value={String(usersData.filter(u => u.status === "Active").length)} />
+        <StatCard icon={Clock} title="Pending" value={String(usersData.filter(u => u.status === "Pending").length)} />
       </div>
 
       <div className="relative">
@@ -103,6 +131,55 @@ const UsersPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Add User Modal */}
+      <Dialog open={showCreate} onOpenChange={setShowCreate}>
+        <DialogContent className="bg-card border-border text-foreground max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <Plus className="h-4 w-4 text-primary-foreground" />
+              </div>
+              Add New User
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Add a new team member to the platform.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>First Name *</Label>
+                <Input placeholder="John" value={newUser.firstName} onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} className="bg-input border-border" />
+              </div>
+              <div className="space-y-2">
+                <Label>Last Name *</Label>
+                <Input placeholder="Doe" value={newUser.lastName} onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} className="bg-input border-border" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Email *</Label>
+              <Input type="email" placeholder="john.doe@karbon14.com" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} className="bg-input border-border" />
+            </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <Select value={newUser.role} onValueChange={(v) => setNewUser({ ...newUser, role: v })}>
+                <SelectTrigger className="bg-input border-border"><SelectValue placeholder="Select role" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Administrator">Administrator</SelectItem>
+                  <SelectItem value="Regular User">Regular User</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setShowCreate(false)} className="border-border">Cancel</Button>
+              <Button onClick={handleAddUser} className="bg-gradient-to-r from-primary to-accent text-primary-foreground gap-2">
+                <Plus className="h-4 w-4" /> Add User
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
