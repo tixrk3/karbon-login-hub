@@ -35,8 +35,8 @@ const lineData = [
 ];
 
 const partnerPerformance = [
-  { name: "Google AdX", sub: "12 active tags", tags: 12, impressions: "534,234", fillRate: "78.5%", avgCtr: "2.89%", revenue: "$12,450", trend: "+15.2%", trendType: "positive" as const, status: "Enabled" },
-  { name: "Amazon Publisher Services", sub: "8 active tags", tags: 8, impressions: "423,567", fillRate: "82.3%", avgCtr: "3.12%", revenue: "$9,876", trend: "+12.8%", trendType: "positive" as const, status: "Enabled" },
+  { name: "Google AdX", sub: "12 active tags", tags: 12, impressions: "534,234", fillRate: "78.5%", avgCtr: "2.89%", revenue: "$12,450", trend: "+15.2%", trendType: "positive" as const, status: "Excellent" },
+  { name: "Amazon Publisher Services", sub: "8 active tags", tags: 8, impressions: "423,567", fillRate: "82.3%", avgCtr: "3.12%", revenue: "$9,876", trend: "+12.8%", trendType: "positive" as const, status: "Excellent" },
   { name: "Index Exchange", sub: "15 active tags", tags: 15, impressions: "312,890", fillRate: "71.2%", avgCtr: "2.45%", revenue: "$7,234", trend: "+8.4%", trendType: "positive" as const, status: "Good" },
   { name: "OpenX", sub: "6 active tags", tags: 6, impressions: "245,123", fillRate: "69.8%", avgCtr: "2.21%", revenue: "$5,432", trend: "-2.3%", trendType: "negative" as const, status: "Good" },
   { name: "PubMatic", sub: "10 active tags", tags: 10, impressions: "189,456", fillRate: "65.4%", avgCtr: "1.98%", revenue: "$4,123", trend: "+5.1%", trendType: "positive" as const, status: "Average" },
@@ -143,7 +143,7 @@ const Dashboard = () => (
                 </td>
                 <td className="text-right py-3 px-2">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    p.status === "Enabled" ? "bg-accent/20 text-accent" :
+                    p.status === "Excellent" ? "bg-accent/20 text-accent" :
                     p.status === "Good" ? "bg-accent/20 text-accent" :
                     p.status === "Average" ? "bg-yellow-500/20 text-yellow-400" :
                     "bg-destructive/20 text-destructive"
