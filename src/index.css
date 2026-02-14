@@ -163,6 +163,29 @@
   .blob-secondary {
     background: hsl(var(--secondary) / 0.3);
   }
+
+  .sidebar-stripes {
+    position: relative;
+    overflow: hidden;
+  }
+  .sidebar-stripes::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -55deg,
+      transparent,
+      transparent 8px,
+      hsl(var(--accent) / 0.04) 8px,
+      hsl(var(--accent) / 0.04) 9px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .sidebar-stripes > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 @keyframes blob-float {
