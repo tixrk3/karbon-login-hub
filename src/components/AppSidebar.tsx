@@ -24,7 +24,7 @@ export function AppSidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <Sidebar className="border-r border-border bg-sidebar sidebar-stripes">
+    <Sidebar className="border-r border-border bg-sidebar">
       <div className="flex flex-col items-center py-6 px-4 border-b border-border">
         <img src={karbon14Logo} alt="KARBON14" className="h-16 w-auto mb-2" />
         <span className="text-foreground font-bold text-lg tracking-wider whitespace-nowrap">KARBON14</span>
