@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ type Theme = "light" | "dark" | "system";
 
 export const ThemeToggle = () => {
   const [theme, setTheme] = useState<Theme>("dark");
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as Theme | null;
@@ -35,38 +34,12 @@ export const ThemeToggle = () => {
   };
 
   const handleThemeChange = (newTheme: Theme) => {
-    const btn = triggerRef.current;
-
-    // Use View Transitions API for a circular ripple effect
-    if (document.startViewTransition && btn) {
-      const rect = btn.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      const endRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-      );
-
-      const transition = document.startViewTransition(() => {
+    // Simple crossfade via View Transitions API
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
         setTheme(newTheme);
         localStorage.setItem("theme", newTheme);
         applyTheme(newTheme);
-      });
-
-      transition.ready.then(() => {
-        document.documentElement.animate(
-          {
-            clipPath: [
-              `circle(0px at ${x}px ${y}px)`,
-              `circle(${endRadius}px at ${x}px ${y}px)`,
-            ],
-          },
-          {
-            duration: 600,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
       });
     } else {
       setTheme(newTheme);
@@ -90,7 +63,6 @@ export const ThemeToggle = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          ref={triggerRef}
           variant="ghost"
           size="icon"
           className="text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
