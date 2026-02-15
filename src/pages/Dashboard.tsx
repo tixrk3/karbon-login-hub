@@ -62,50 +62,50 @@ const Dashboard = () => (
 
     {/* Charts */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div className="bg-card border border-border rounded-xl p-5">
+      <div className="glass-card p-5">
         <h3 className="text-foreground font-semibold mb-4">Impressions & Clicks</h3>
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={areaData}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-            <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))" }} />
-            <Area type="monotone" dataKey="impressions" stroke="hsl(var(--accent))" fill="hsl(var(--accent) / 0.3)" />
-            <Area type="monotone" dataKey="clicks" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.2)" />
+            <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, color: "hsl(var(--foreground))" }} />
+            <Area type="monotone" dataKey="impressions" stroke="hsl(var(--accent))" fill="hsl(var(--accent) / 0.15)" strokeWidth={2} />
+            <Area type="monotone" dataKey="clicks" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.1)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-5">
+      <div className="glass-card p-5">
         <h3 className="text-foreground font-semibold mb-4">Verification Coverage by Partner</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={barData}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="partner" stroke="hsl(var(--muted-foreground))" fontSize={12} />
             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-            <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))" }} />
-            <Bar dataKey="coverage" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+            <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, color: "hsl(var(--foreground))" }} />
+            <Bar dataKey="coverage" fill="hsl(var(--accent))" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
 
     {/* Viewability Trend */}
-    <div className="bg-card border border-border rounded-xl p-5">
+    <div className="glass-card p-5">
       <h3 className="text-foreground font-semibold mb-4">Viewability Trend</h3>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={lineData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
           <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-          <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, color: "hsl(var(--foreground))" }} />
-          <Line type="monotone" dataKey="viewability" stroke="#9b87f5" strokeWidth={2} dot={{ fill: "#9b87f5", r: 4 }} />
+          <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, color: "hsl(var(--foreground))" }} />
+          <Line type="monotone" dataKey="viewability" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: "hsl(var(--primary))", r: 4 }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
 
     {/* Partner Performance Table */}
-    <div className="bg-card border border-border rounded-xl p-5">
+    <div className="glass-card p-5">
       <h3 className="text-foreground font-semibold mb-1">Partner Performance Overview</h3>
       <p className="text-sm text-muted-foreground mb-4">Detailed metrics for all active partners</p>
       <div className="overflow-auto">
